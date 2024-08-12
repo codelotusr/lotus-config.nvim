@@ -119,8 +119,35 @@ return {
         position = 'center', -- Center the footer
       }
 
-      -- Apply the configuration
       alpha.setup(dashboard.opts)
+    end,
+  },
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    config = function()
+      require('oil').setup()
+    end,
+  },
+  {
+    'numToStr/Comment.nvim',
+    opts = {},
+    config = function()
+      require('Comment').setup()
+    end,
+  },
+  {
+    'dmmulroy/ts-error-translator.nvim',
+    config = function()
+      require('ts-error-translator').setup()
+    end,
+  },
+  -- Auto save without needing to :w write to file
+  {
+    'Pocco81/auto-save.nvim',
+    config = function()
+      require('auto-save').setup()
     end,
   },
 }
