@@ -5,7 +5,10 @@
 return {
   -- Wakatime plugin
   { 'wakatime/vim-wakatime', lazy = false },
-
+  {
+    'christoomey/vim-tmux-navigator',
+    lazy = false,
+  },
   -- Alpha-nvim plugin for startup dashboard
   {
     'goolord/alpha-nvim',
@@ -66,18 +69,6 @@ return {
         [[                        #                        ==*                                                ]],
       }
 
-      vim.cmd [[
-      highlight LotusGreen guifg=#00FF00 guibg=NONE gui=bold
-      highlight LotusPink guifg=#FFC0CB guibg=NONE gui=bold
-      highlight LotusYellow guifg=#FFFF00 guibg=NONE gui=bold
-      ]]
-
-      -- Apply highlights using matchadd
-      vim.api.nvim_buf_add_highlight(0, -1, 'LotusGreen', 0, 0, -1)
-      vim.fn.matchadd('LotusGreen', '[%#%@%&%*]')
-      vim.fn.matchadd('LotusPink', '[:=]')
-      vim.fn.matchadd('LotusYellow', '[@]')
-
       -- Set up buttons for common tasks
       dashboard.section.buttons.val = {
         dashboard.button('e', '  New file', ':ene <BAR> startinsert <CR>'),
@@ -113,6 +104,25 @@ return {
       }
 
       alpha.setup(dashboard.opts)
+
+      -- Apply highlights only to the Alpha dashboard
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'alpha',
+        callback = function()
+          -- Highlight groups
+          vim.cmd [[
+        highlight LotusGreen guifg=#00FF00 guibg=NONE gui=bold
+        highlight LotusPink guifg=#FFC0CB guibg=NONE gui=bold
+        highlight LotusYellow guifg=#FFFF00 guibg=NONE gui=bold
+        ]]
+
+          -- Apply highlights using matchadd
+          vim.api.nvim_buf_add_highlight(0, -1, 'LotusGreen', 0, 0, -1)
+          vim.fn.matchadd('LotusGreen', '[%#%@%&%*]')
+          vim.fn.matchadd('LotusPink', '[:=]')
+          vim.fn.matchadd('LotusYellow', '[@]')
+        end,
+      })
     end,
   },
   {
@@ -141,6 +151,12 @@ return {
     'Pocco81/auto-save.nvim',
     config = function()
       require('auto-save').setup()
+
+      vim.api.nvim_set_keymap('n', '<leader>+', ':ASToggle<CR>', {
+        noremap = true,
+        silent = true,
+        desc = 'Toggle Auto-Save',
+      })
     end,
   },
   {
@@ -157,5 +173,8 @@ return {
         highlight_on_key = true,
       }
     end,
+  },
+  {
+    'andweeb/presence.nvim',
   },
 }
