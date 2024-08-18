@@ -282,7 +282,10 @@ require('lazy').setup({
           settings = {
             python = {
               analysis = {
-                typeCheckingMode = 'strict',
+                typeCheckingMode = 'basic',
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = 'workspace',
               },
             },
           },
@@ -293,6 +296,18 @@ require('lazy').setup({
             css = { validate = true },
             scss = { validate = true },
             less = { validate = true },
+          },
+        },
+
+        emmet_ls = {
+          capabilities = capabilities,
+          filetypes = { 'css', 'html', 'javascript', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' },
+          init_options = {
+            html = {
+              options = {
+                ['bem.enabled'] = true,
+              },
+            },
           },
         },
 
