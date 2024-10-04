@@ -290,7 +290,6 @@ require('lazy').setup({
             },
           },
         },
-        tsserver = {},
         cssls = {
           settings = {
             css = { validate = true },
@@ -301,7 +300,7 @@ require('lazy').setup({
 
         emmet_ls = {
           capabilities = capabilities,
-          filetypes = { 'css', 'html', 'javascript', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue' },
+          filetypes = { 'css', 'html', 'javascript', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'typescriptreact', 'vue', 'htmldjango' },
           init_options = {
             html = {
               options = {
@@ -375,8 +374,30 @@ require('lazy').setup({
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
         go = { 'goimports', 'gofmt', stop_after_first = true },
         sql = { 'pg_format', 'sqlfluff', stop_after_first = true },
+        html = { 'htmlhint', 'curlylint' },
+        htmldjango = { 'djhtml', 'djlint' },
       },
     },
+  },
+
+  -- Auto-find venv
+  {
+    'linux-cultist/venv-selector.nvim',
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'mfussenegger/nvim-dap',
+      'mfussenegger/nvim-dap-python', --optional
+      { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+    },
+    lazy = false,
+    branch = 'regexp', -- This is the regexp branch, use this for the new version
+    config = function()
+      require('venv-selector').setup {
+        auto_detect = true,
+        venv_dirs = { '.venv', 'venv' },
+      }
+      vim.keymap.set('n', '<leader>vs', ':VenvSelect<CR>', { desc = '[V]env [S]elect' })
+    end,
   },
 
   { -- Autocompletion
