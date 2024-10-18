@@ -239,4 +239,20 @@ return {
       end,
     },
   },
+  {
+    'vyfor/cord.nvim',
+    build = './build || .\\build',
+    event = 'VeryLazy',
+    opts = {},
+    config = function()
+      require('cord').setup {
+        display = {
+          show_repository = false,
+        },
+        lsp = {
+          show_problem_count = true,
+        },
+      }
+    end,
+  },
 }
