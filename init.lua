@@ -323,6 +323,17 @@ require('lazy').setup({
             },
           },
         },
+        angularls = {
+          cmd = { 'ngserver', '--stdio', '--tsProbeLocations', '', '--ngProbeLocations', '' },
+          filetypes = { 'html', 'typescript' },
+          root_dir = function(fname)
+            return require('lspconfig.util').root_pattern 'angular.json'(fname)
+              or require('lspconfig.util').root_pattern('tsconfig.json', 'package.json', '.git')(fname)
+          end,
+          on_new_config = function(new_config)
+            new_config.cmd = { 'ngserver', '--stdio', '--tsProbeLocations', '', '--ngProbeLocations', '' }
+          end,
+        },
       }
 
       require('mason').setup()

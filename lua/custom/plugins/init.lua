@@ -148,18 +148,18 @@ return {
     end,
   },
   -- Auto save without needing to :w write to file
-  {
-    'Pocco81/auto-save.nvim',
-    config = function()
-      require('auto-save').setup()
-
-      vim.api.nvim_set_keymap('n', '<leader>+', ':ASToggle<CR>', {
-        noremap = true,
-        silent = true,
-        desc = 'Toggle Auto-Save',
-      })
-    end,
-  },
+  --  {
+  --   'Pocco81/auto-save.nvim',
+  --   config = function()
+  --     require('auto-save').setup()
+  --
+  --     vim.api.nvim_set_keymap('n', '<leader>+', ':ASToggle<CR>', {
+  --        noremap = true,
+  --        silent = true,
+  --        desc = 'Toggle Auto-Save',
+  --      })
+  --    end,
+  --  },
   {
     'ThePrimeagen/harpoon',
     opts = {},
@@ -219,5 +219,24 @@ return {
         },
       }
     end,
+  },
+  {
+    {
+      'zbirenbaum/copilot.lua',
+      event = 'InsertEnter',
+      config = function()
+        require('copilot').setup {
+          suggestion = {
+            auto_trigger = false,
+            keymap = {
+              accept = '<A-\\>',
+              next = '<A-]>',
+              prev = '<A-[>',
+            },
+          },
+          panel = { enabled = false },
+        }
+      end,
+    },
   },
 }
