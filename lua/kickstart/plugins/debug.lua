@@ -16,6 +16,7 @@ return {
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
     'mfussenegger/nvim-dap-python',
+    'mxsdev/nvim-dap-vscode-js',
   },
   keys = function(_, keys)
     local dap = require 'dap'
@@ -57,6 +58,8 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'python',
+        'js',
       },
     }
 
@@ -65,6 +68,8 @@ return {
     dapui.setup {
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
       controls = {
+        enabled = true,
+        element = 'repl',
         icons = {
           pause = '⏸',
           play = '▶',
@@ -76,6 +81,49 @@ return {
           terminate = '⏹',
           disconnect = '⏏',
         },
+      },
+      expand_lines = true,
+      force_buffers = true,
+      element_mappings = {},
+      layouts = {
+        {
+          elements = {
+            { id = 'scopes', size = 0.25 },
+            { id = 'breakpoints', size = 0.25 },
+            { id = 'stacks', size = 0.25 },
+            { id = 'watches', size = 0.25 },
+          },
+          position = 'left',
+          size = 40,
+        },
+        {
+          elements = {
+            { id = 'repl', size = 0.5 },
+            { id = 'console', size = 0.5 },
+          },
+          position = 'bottom',
+          size = 10,
+        },
+      },
+      mappings = {
+        edit = 'e',
+        expand = { '<CR>', '<2-LeftMouse>' },
+        open = 'o',
+        remove = 'd',
+        repl = 'r',
+        toggle = 't',
+      },
+      floating = {
+        max_height = 0.8,
+        max_width = 0.8,
+        border = 'single',
+        mappings = {
+          close = { 'q', '<Esc>' },
+        },
+      },
+      render = {
+        indent = 1,
+        max_value_lines = nil,
       },
     }
 
@@ -91,6 +139,13 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
-    require('dap-python').setup 'python'
+
+    require('dap-vscode-js').setup {
+      node_path = 'node',
+      debugger_path = vim.fn.stdpath 'data' .. '/mason/packages/js-debug-adapter',
+      adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge' },
+    }
+
+    require('dap-python').setup 'python3.12'
   end,
 }
