@@ -444,6 +444,7 @@ require('lazy').setup({
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
+      local lspkind = require 'lspkind'
       luasnip.config.setup {}
 
       cmp.setup {
@@ -505,6 +506,22 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'obsidian' },
+        },
+        formatting = {
+          format = lspkind.cmp_format {
+            mode = 'symbol_text',
+            maxwidth = 50,
+            ellipsis_char = '...',
+            show_label_details = true,
+
+            fields = { 'abbr', 'kind', 'menu' },
+            expandable_indicator = true,
+
+            before = function(entry, vim_item)
+              return vim_item
+            end,
+          },
         },
       }
     end,

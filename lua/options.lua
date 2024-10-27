@@ -63,3 +63,6 @@ vim.opt.scrolloff = 10
 
 -- Enables true color support for the terminal
 vim.opt.termguicolors = true
+
+-- Turn on conceallevel for obsidian.nvim
+vim.opt.conceallevel = 1

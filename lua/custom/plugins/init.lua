@@ -147,25 +147,40 @@ return {
       require('ts-error-translator').setup()
     end,
   },
-  -- Auto save without needing to :w write to file
-  --  {
-  --   'Pocco81/auto-save.nvim',
-  --   config = function()
-  --     require('auto-save').setup()
-  --
-  --     vim.api.nvim_set_keymap('n', '<leader>+', ':ASToggle<CR>', {
-  --        noremap = true,
-  --        silent = true,
-  --        desc = 'Toggle Auto-Save',
-  --      })
-  --    end,
-  --  },
   {
     'ThePrimeagen/harpoon',
     opts = {},
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
+    config = function()
+      local mark = require 'harpoon.mark'
+      local ui = require 'harpoon.ui'
+
+      -- Basic keybindings
+      vim.keymap.set('n', '<Leader>ha', mark.add_file, { desc = 'Harpoon: Add File' })
+      vim.keymap.set('n', '<Leader>hm', ui.toggle_quick_menu, { desc = 'Harpoon: Toggle Menu' })
+
+      -- Navigate to marks
+      vim.keymap.set('n', '<Leader>h1', function()
+        ui.nav_file(1)
+      end, { desc = 'Harpoon: Go to Mark 1' })
+      vim.keymap.set('n', '<Leader>h2', function()
+        ui.nav_file(2)
+      end, { desc = 'Harpoon: Go to Mark 2' })
+      vim.keymap.set('n', '<Leader>h3', function()
+        ui.nav_file(3)
+      end, { desc = 'Harpoon: Go to Mark 3' })
+      vim.keymap.set('n', '<Leader>h4', function()
+        ui.nav_file(4)
+      end, { desc = 'Harpoon: Go to Mark 4' })
+
+      vim.keymap.set('n', '<C-h>', ui.nav_prev, { desc = 'Harpoon: Go to Previous Mark' })
+      vim.keymap.set('n', '<C-l>', ui.nav_next, { desc = 'Harpoon: Go to Next Mark' })
+
+      require('telescope').load_extension 'harpoon'
+      vim.keymap.set('n', '<Leader>ht', ':Telescope harpoon marks<CR>', { desc = 'Harpoon: Telescope Marks' })
+    end,
   },
   {
     'kawre/leetcode.nvim',
@@ -277,5 +292,113 @@ return {
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
     opts = {},
+  },
+  {
+    'folke/trouble.nvim',
+    opts = {},
+    cmd = 'Trouble',
+    keys = {
+      {
+        '<leader>xx',
+        '<cmd>Trouble diagnostics toggle<cr>',
+        desc = 'Diagnostics (Trouble)',
+      },
+      {
+        '<leader>xX',
+        '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
+        desc = 'Buffer Diagnostics (Trouble)',
+      },
+      {
+        '<leader>cs',
+        '<cmd>Trouble symbols toggle focus=false<cr>',
+        desc = 'Symbols (Trouble)',
+      },
+      {
+        '<leader>cl',
+        '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
+        desc = 'LSP Definitions / references / ... (Trouble)',
+      },
+      {
+        '<leader>xL',
+        '<cmd>Trouble loclist toggle<cr>',
+        desc = 'Location List (Trouble)',
+      },
+      {
+        '<leader>xQ',
+        '<cmd>Trouble qflist toggle<cr>',
+        desc = 'Quickfix List (Trouble)',
+      },
+    },
+  },
+  {
+    'onsails/lspkind.nvim',
+    opts = {},
+  },
+  {
+    'epwalsh/obsidian.nvim',
+    version = '*',
+    lazy = true,
+    ft = 'markdown',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'hrsh7th/nvim-cmp',
+      'nvim-telescope/telescope.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    opts = {
+      workspaces = {
+        {
+          name = 'personal',
+          path = '/mnt/c/Users/Lotus/Sync/0',
+        },
+        {
+          name = 'work',
+          path = '~/vaults/work',
+        },
+      },
+    },
+  },
+  {
+    'ruifm/gitlinker.nvim',
+    opts = {},
+    requires = {
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      require('gitlinker').setup()
+    end,
+  },
+  {
+    'meain/vim-printer',
+  },
+  {
+    'rest-nvim/rest.nvim',
+  },
+  {
+    'pwntester/octo.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+      -- OR 'ibhagwan/fzf-lua',
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('octo').setup()
+    end,
+  },
+  {
+    'eandrju/cellular-automaton.nvim',
+    keys = {
+      {
+        '<leader>fmlr',
+        '<cmd> CellularAutomaton  make_it_rain<cr>',
+        desc = 'MAKE IT RAIN BABY!!!',
+      },
+      {
+        '<leader>fmlg',
+        '<cmd>CellularAutomaton game_of_life<cr>',
+        desc = 'Game Of Life!!!',
+      },
+    },
   },
 }
