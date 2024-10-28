@@ -357,6 +357,13 @@ return {
         },
       },
     },
+    keys = {
+      {
+        '<leader>on',
+        '<cmd>ObsidianNew<CR>',
+        desc = 'Create a new Obsidian Note',
+      },
+    },
   },
   {
     'ruifm/gitlinker.nvim',
@@ -383,7 +390,11 @@ return {
       'nvim-tree/nvim-web-devicons',
     },
     config = function()
-      require('octo').setup()
+      require('octo').setup {
+        suppress_missing_scope = {
+          projects_v2 = true,
+        },
+      }
     end,
   },
   {
@@ -398,6 +409,68 @@ return {
         '<leader>fmlg',
         '<cmd>CellularAutomaton game_of_life<cr>',
         desc = 'Game Of Life!!!',
+      },
+    },
+  },
+  {
+    'ThePrimeagen/refactoring.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    lazy = false,
+    config = function()
+      require('refactoring').setup {
+        prompt_func_return_type = {
+          go = true,
+          java = true,
+        },
+        prompt_func_param_type = {
+          go = true,
+          java = true,
+        },
+        show_success_message = true,
+      }
+    end,
+  },
+  {
+    'zeioth/garbage-day.nvim',
+    dependencies = 'neovim/nvim-lspconfig',
+    event = 'VeryLazy',
+    opts = {},
+  },
+  {
+    'kosayoda/nvim-lightbulb',
+    config = function()
+      require('nvim-lightbulb').setup {
+        autocmd = { enabled = true },
+      }
+    end,
+  },
+  {
+    'linrongbin16/lsp-progress.nvim',
+    config = function()
+      require('lsp-progress').setup()
+    end,
+  },
+  {
+    'amrbashir/nvim-docs-view',
+    lazy = true,
+    cmd = 'DocsViewToggle',
+    opts = {
+      position = 'bottom',
+      width = 60,
+    },
+    keys = {
+      {
+        '<leader>dt',
+        '<CMD>DocsViewToggle<CR>',
+        desc = '[D]ocs View [T]oggle',
+      },
+      {
+        '<leader>du',
+        '<CMD>DocksViewUpdate<CR>',
+        desc = '[D]ocs View [U]pdate',
       },
     },
   },
