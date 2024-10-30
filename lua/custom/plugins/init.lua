@@ -1,15 +1,9 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
---
--- See the kickstart.nvim README for more information
 return {
-  -- Wakatime plugin
   { 'wakatime/vim-wakatime', lazy = false },
   {
     'christoomey/vim-tmux-navigator',
     lazy = false,
   },
-  -- Alpha-nvim plugin for startup dashboard
   {
     'goolord/alpha-nvim',
     lazy = false,
@@ -17,7 +11,6 @@ return {
       local alpha = require 'alpha'
       local dashboard = require 'alpha.themes.dashboard'
 
-      -- Set header
       dashboard.section.header.val = {
         [[                       ##                                                    **#                    ]],
         [[                                                                             ##                     ]],
@@ -69,7 +62,6 @@ return {
         [[                        #                        ==*                                                ]],
       }
 
-      -- Set up buttons for common tasks
       dashboard.section.buttons.val = {
         dashboard.button('e', '  New file', ':ene <BAR> startinsert <CR>'),
         dashboard.button('f', '\u{f021e}  Find file', ':Telescope find_files<CR>'),
@@ -77,10 +69,8 @@ return {
         dashboard.button('q', '\u{f0a48}  Quit NVIM', ':qa<CR>'),
       }
 
-      -- Footer with a custom message
       dashboard.section.footer.val = "Codelotusr says 'Hello World'"
 
-      -- Layout definition
       dashboard.opts.layout = {
         { type = 'padding', val = 1 },
         dashboard.section.header,
@@ -90,33 +80,29 @@ return {
         dashboard.section.footer,
       }
 
-      -- Options for each section (optional)
       dashboard.section.header.opts = {
-        position = 'center', -- Center the header
+        position = 'center',
       }
       dashboard.section.buttons.opts = {
-        hl = 'Keyword', -- Highlight group for the buttons
-        spacing = 1, -- Space between buttons
+        hl = 'Keyword',
+        spacing = 1,
       }
       dashboard.section.footer.opts = {
-        hl = 'Comment', -- Highlight group for the footer
-        position = 'center', -- Center the footer
+        hl = 'Comment',
+        position = 'center',
       }
 
       alpha.setup(dashboard.opts)
 
-      -- Apply highlights only to the Alpha dashboard
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'alpha',
         callback = function()
-          -- Highlight groups
           vim.cmd [[
         highlight LotusGreen guifg=#00FF00 guibg=NONE gui=bold
         highlight LotusPink guifg=#FFC0CB guibg=NONE gui=bold
         highlight LotusYellow guifg=#FFFF00 guibg=NONE gui=bold
         ]]
 
-          -- Apply highlights using matchadd
           vim.api.nvim_buf_add_highlight(0, -1, 'LotusGreen', 0, 0, -1)
           vim.fn.matchadd('LotusGreen', '[%#%@%&%*]')
           vim.fn.matchadd('LotusPink', '[:=]')
@@ -157,11 +143,9 @@ return {
       local mark = require 'harpoon.mark'
       local ui = require 'harpoon.ui'
 
-      -- Basic keybindings
       vim.keymap.set('n', '<Leader>ha', mark.add_file, { desc = 'Harpoon: Add File' })
       vim.keymap.set('n', '<Leader>hm', ui.toggle_quick_menu, { desc = 'Harpoon: Toggle Menu' })
 
-      -- Navigate to marks
       vim.keymap.set('n', '<Leader>h1', function()
         ui.nav_file(1)
       end, { desc = 'Harpoon: Go to Mark 1' })
@@ -187,7 +171,7 @@ return {
     build = ':TSUpdate html',
     dependencies = {
       'nvim-telescope/telescope.nvim',
-      'nvim-lua/plenary.nvim', -- required by telescope
+      'nvim-lua/plenary.nvim',
       'MunifTanjim/nui.nvim',
 
       -- optional
@@ -218,11 +202,11 @@ return {
           },
         },
         presets = {
-          bottom_search = true, -- use a classic bottom cmdline for search
-          command_palette = true, -- position the cmdline and popupmenu together
-          long_message_to_split = true, -- long messages will be sent to a split
-          inc_rename = false, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = false, -- add a border to hover docs and signature help
+          bottom_search = true,
+          command_palette = true,
+          long_message_to_split = true,
+          inc_rename = false,
+          lsp_doc_border = false,
         },
       }
     end,
@@ -246,22 +230,22 @@ return {
       end,
     },
   },
-  {
-    'vyfor/cord.nvim',
-    build = './build || .\\build',
-    event = 'VeryLazy',
-    opts = {},
-    config = function()
-      require('cord').setup {
-        display = {
-          show_repository = false,
-        },
-        lsp = {
-          show_problem_count = true,
-        },
-      }
-    end,
-  },
+  -- {
+  --   'vyfor/cord.nvim',
+  --   build = './build || .\\build',
+  --   event = 'VeryLazy',
+  --   opts = {},
+  --   config = function()
+  --     require('cord').setup {
+  --       display = {
+  --         show_repository = false,
+  --       },
+  --       lsp = {
+  --         show_problem_count = true,
+  --       },
+  --     }
+  --   end,
+  -- },
   {
     'folke/flash.nvim',
     event = 'VeryLazy',
@@ -287,8 +271,7 @@ return {
   },
   {
     'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' },
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
     opts = {},
@@ -386,7 +369,6 @@ return {
     requires = {
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope.nvim',
-      -- OR 'ibhagwan/fzf-lua',
       'nvim-tree/nvim-web-devicons',
     },
     config = function()
@@ -473,5 +455,8 @@ return {
         desc = '[D]ocs View [U]pdate',
       },
     },
+  },
+  {
+    { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
   },
 }
