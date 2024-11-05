@@ -267,6 +267,7 @@ require('lazy').setup({
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       --  Add any additional override configuration in the following tables. Available keys are:
       --  - cmd (table): Override the default command used to start the server
@@ -274,6 +275,13 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+
+      local global_node_modules = '/usr/lib/node_modules'
+
+      local angular_ls_node_modules = vim.fn.expand '~' .. '/.local/share/nvim/mason/packages/angular-language-server/node_modules'
+
+      local combined_probe_locations = global_node_modules .. ',' .. angular_ls_node_modules
+
       local servers = {
         -- clangd = {},
         gopls = {},
@@ -292,11 +300,21 @@ require('lazy').setup({
           },
         },
         cssls = {
+          cmd = { 'vscode-css-language-server', '--stdio' },
+          filetypes = { 'css', 'scss', 'less' },
+          init_options = { provideFormatter = false },
           settings = {
-            css = { validate = true },
-            scss = { validate = true },
-            less = { validate = true },
+            css = {
+              validate = true,
+            },
+            less = {
+              validate = true,
+            },
+            scss = {
+              validate = true,
+            },
           },
+          single_file_support = true,
         },
 
         emmet_ls = {
@@ -325,15 +343,123 @@ require('lazy').setup({
           },
         },
         angularls = {
-          cmd = { 'ngserver', '--stdio', '--tsProbeLocations', '', '--ngProbeLocations', '' },
-          filetypes = { 'html', 'typescript' },
-          root_dir = function(fname)
-            return require('lspconfig.util').root_pattern 'angular.json'(fname)
-              or require('lspconfig.util').root_pattern('tsconfig.json', 'package.json', '.git')(fname)
-          end,
-          on_new_config = function(new_config)
-            new_config.cmd = { 'ngserver', '--stdio', '--tsProbeLocations', '', '--ngProbeLocations', '' }
-          end,
+          cmd = {
+            'ngserver',
+            '--stdio',
+            '--tsProbeLocations',
+            combined_probe_locations,
+            '--ngProbeLocations',
+            combined_probe_locations,
+          },
+          filetypes = { 'typescript', 'html', 'typescriptreact', 'typescript.tsx', 'htmlangular' },
+        },
+        ts_ls = {
+          cmd = {
+            'typescript-language-server',
+            '--stdio',
+          },
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'javascript.jsx',
+            'typescript',
+            'typescriptreact',
+            'typescript.tsx',
+          },
+          init_options = {
+            hostInfo = 'neovim',
+          },
+          single_file_support = true,
+        },
+        html = {
+          cmd = { 'vscode-html-language-server', '--stdio' },
+          filetypes = { 'html', 'templ' },
+          init_options = {
+            configurationSection = { 'html', 'css', 'javascript' },
+            embeddedLanguages = {
+              css = true,
+              javascript = true,
+            },
+            provideFormatter = true,
+          },
+          settings = {},
+          single_file_support = true,
+        },
+        tailwindcss = {
+          cmd = { 'tailwindcss-language-server', '--stdio' },
+          filetypes = {
+            'aspnetcorerazor',
+            'astro',
+            'astro-markdown',
+            'blade',
+            'clojure',
+            'django-html',
+            'htmldjango',
+            'edge',
+            'eelixir',
+            'elixir',
+            'ejs',
+            'erb',
+            'eruby',
+            'gohtml',
+            'gohtmltmpl',
+            'haml',
+            'handlebars',
+            'hbs',
+            'html',
+            'htmlangular',
+            'html-eex',
+            'heex',
+            'jade',
+            'leaf',
+            'liquid',
+            'markdown',
+            'mdx',
+            'mustache',
+            'njk',
+            'nunjucks',
+            'php',
+            'razor',
+            'slim',
+            'twig',
+            'css',
+            'less',
+            'postcss',
+            'sass',
+            'scss',
+            'stylus',
+            'sugarss',
+            'javascript',
+            'javascriptreact',
+            'reason',
+            'rescript',
+            'typescript',
+            'typescriptreact',
+            'vue',
+            'svelte',
+            'templ',
+          },
+          settings = {
+            tailwindCSS = {
+              classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass' },
+              includeLanguages = {
+                eelixir = 'html-eex',
+                eruby = 'erb',
+                htmlangular = 'html',
+                templ = 'html',
+              },
+              lint = {
+                cssConflict = 'warning',
+                invalidApply = 'error',
+                invalidConfigPath = 'error',
+                invalidScreen = 'error',
+                invalidTailwindDirective = 'error',
+                invalidVariant = 'error',
+                recommendedVariantOrder = 'warning',
+              },
+              validate = true,
+            },
+          },
         },
       }
 
@@ -342,6 +468,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'typescript-language-server', -- TypeScript/JavaScript support
+        'angular-language-server', -- Angular support
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
