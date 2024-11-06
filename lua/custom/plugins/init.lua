@@ -118,6 +118,7 @@ return {
     config = function()
       require('oil').setup()
       vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+      vim.keymap.set('n', '<leader>-', require('oil').toggle_float, { desc = 'Open parent directory in a floating window' })
     end,
   },
   {
@@ -182,6 +183,18 @@ return {
     opts = {
       lang = 'python3',
     },
+    -- keys = {
+    --   {
+    --     '<leader>lt',
+    --     '<cmd>Leet Test<cr>',
+    --     desc = 'Leetcode test',
+    --   },
+    --   {
+    --     '<leader>ls',
+    --     '<CMD>Leet Submit<CR>',
+    --     desc = 'Leetcode submit',
+    --   },
+    -- },
   },
   {
     'folke/noice.nvim',
@@ -498,6 +511,78 @@ return {
             },
           },
         },
+      }
+    end,
+  },
+  {
+    'luckasRanarison/tailwind-tools.nvim',
+    name = 'tailwind-tools',
+    build = ':UpdateRemotePlugins',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-telescope/telescope.nvim', -- optional
+    },
+    opts = {}, -- your configuration
+  },
+  {
+    'uga-rosa/ccc.nvim',
+    config = function()
+      require('ccc').setup {}
+    end,
+  },
+  {
+    'stevearc/aerial.nvim',
+    opts = {},
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('aerial').setup {
+        on_attach = function(bufnr)
+          vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr })
+          vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr })
+        end,
+      }
+    end,
+    vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>', { desc = 'Toggle Aerial' }),
+  },
+  {
+    'utilyre/barbecue.nvim',
+    name = 'barbecue',
+    version = '*',
+    dependencies = {
+      'SmiteshP/nvim-navic',
+      'nvim-tree/nvim-web-devicons',
+    },
+    opts = {},
+  },
+  {
+    'MagicDuck/grug-far.nvim',
+    config = function()
+      require('grug-far').setup {}
+    end,
+    keys = {
+      {
+        '<leader>rg',
+        '<cmd>GrugFar<CR>',
+        desc = 'Find and replace!',
+      },
+    },
+  },
+  {
+    'tomiis4/hypersonic.nvim',
+    config = function()
+      require('hypersonic').setup {}
+    end,
+  },
+  {
+    'ethanholz/nvim-lastplace',
+    config = function()
+      require('nvim-lastplace').setup {
+        lastplace_ignore_buftype = { 'quickfix', 'nofile', 'help' },
+        lastplace_ignore_filetype = { 'gitcommit', 'gitrebase', 'svn', 'hgcommit' },
+        lastplace_open_folds = true,
       }
     end,
   },
