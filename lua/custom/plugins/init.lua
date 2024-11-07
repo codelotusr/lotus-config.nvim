@@ -532,30 +532,47 @@ return {
   },
   {
     'stevearc/aerial.nvim',
-    opts = {},
+    opts = {
+      on_open = function()
+        vim.api.nvim_set_keymap('n', '{', '<Cmd>AerialPrev<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '}', '<Cmd>AerialNext<CR>', { noremap = true, silent = true })
+        aerial_open = true
+      end,
+
+      on_close = function()
+        vim.api.nvim_set_keymap('n', '{', '{', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '}', '}', { noremap = true, silent = true })
+        aerial_open = false
+      end,
+    },
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
       'nvim-tree/nvim-web-devicons',
     },
-    config = function()
-      require('aerial').setup {
-        on_attach = function(bufnr)
-          vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr })
-          vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr })
-        end,
-      }
+    config = function(_, opts)
+      local aerial_open = false -- State variable to track whether Aerial is open
+
+      -- Set up Aerial with options
+      require('aerial').setup(opts)
+
+      -- Key mapping to toggle Aerial
+      vim.keymap.set('n', '<leader>ta', function()
+        -- Toggle Aerial and update state
+        if aerial_open then
+          -- If Aerial is currently open, close it and reset mappings
+          require('aerial').close()
+          vim.api.nvim_set_keymap('n', '{', '{', { noremap = true, silent = true })
+          vim.api.nvim_set_keymap('n', '}', '}', { noremap = true, silent = true })
+          aerial_open = false
+        else
+          -- If Aerial is closed, open it and set Aerial mappings
+          require('aerial').open()
+          vim.api.nvim_set_keymap('n', '{', '<Cmd>AerialPrev<CR>', { noremap = true, silent = true })
+          vim.api.nvim_set_keymap('n', '}', '<Cmd>AerialNext<CR>', { noremap = true, silent = true })
+          aerial_open = true
+        end
+      end, { desc = 'Toggle Aerial' })
     end,
-    vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>', { desc = 'Toggle Aerial' }),
-  },
-  {
-    'utilyre/barbecue.nvim',
-    name = 'barbecue',
-    version = '*',
-    dependencies = {
-      'SmiteshP/nvim-navic',
-      'nvim-tree/nvim-web-devicons',
-    },
-    opts = {},
   },
   {
     'MagicDuck/grug-far.nvim',
@@ -583,6 +600,113 @@ return {
         lastplace_ignore_buftype = { 'quickfix', 'nofile', 'help' },
         lastplace_ignore_filetype = { 'gitcommit', 'gitrebase', 'svn', 'hgcommit' },
         lastplace_open_folds = true,
+      }
+    end,
+  },
+  {
+    'smoka7/multicursors.nvim',
+    event = 'VeryLazy',
+    dependencies = {
+      'nvimtools/hydra.nvim',
+    },
+    opts = {},
+    cmd = { 'MCstart', 'MCvisual', 'MCclear', 'MCpattern', 'MCvisualPattern', 'MCunderCursor' },
+    keys = {
+      {
+        mode = { 'v', 'n' },
+        '<Leader>m',
+        '<cmd>MCstart<cr>',
+        desc = 'Create a selection for selected text or word under the cursor',
+      },
+    },
+  },
+  {
+    'gbprod/cutlass.nvim',
+    opts = {
+      cut_key = 'm',
+    },
+    config = function(_, opts)
+      require('cutlass').setup(opts)
+    end,
+  },
+  {
+    'isakbm/gitgraph.nvim',
+    opts = {
+      symbols = {
+        merge_commit = 'M',
+        commit = '*',
+      },
+      format = {
+        timestamp = '%H:%M:%S %d-%m-%Y',
+        fields = { 'hash', 'timestamp', 'author', 'branch_name', 'tag' },
+      },
+      hooks = {
+        on_select_commit = function(commit)
+          print('selected commit:', commit.hash)
+        end,
+        on_select_range_commit = function(from, to)
+          print('selected range:', from.hash, to.hash)
+        end,
+      },
+    },
+    keys = {
+      {
+        '<leader>gl',
+        function()
+          require('gitgraph').draw({}, { all = true, max_count = 5000 })
+        end,
+        desc = 'GitGraph - Draw',
+      },
+    },
+  },
+  {
+    'rhysd/git-messenger.vim',
+  },
+  {
+    'abecodes/tabout.nvim',
+    lazy = false,
+    config = function()
+      require('tabout').setup {
+        tabkey = '<Tab>', -- key to trigger tabout, set to an empty string to disable
+        backwards_tabkey = '<S-Tab>', -- key to trigger backwards tabout, set to an empty string to disable
+        act_as_tab = true, -- shift content if tab out is not possible
+        act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
+        default_tab = '<C-t>', -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
+        default_shift_tab = '<C-d>', -- reverse shift default action,
+        enable_backwards = true, -- well ...
+        completion = false, -- if the tabkey is used in a completion pum
+        tabouts = {
+          { open = "'", close = "'" },
+          { open = '"', close = '"' },
+          { open = '`', close = '`' },
+          { open = '(', close = ')' },
+          { open = '[', close = ']' },
+          { open = '{', close = '}' },
+        },
+        ignore_beginning = true, --[[ if the cursor is at the beginning of a filled element it will rather tab out than shift the content ]]
+        exclude = {}, -- tabout will ignore these filetypes
+      }
+    end,
+    dependencies = { -- These are optional
+      'nvim-treesitter/nvim-treesitter',
+      'L3MON4D3/LuaSnip',
+      'hrsh7th/nvim-cmp',
+    },
+    opt = true, -- Set this to true if the plugin is optional
+    event = 'InsertCharPre', -- Set the event to 'InsertCharPre' for better compatibility
+    priority = 1000,
+  },
+  {
+    'michaelb/sniprun',
+    branch = 'master',
+
+    build = 'sh install.sh',
+    -- do 'sh install.sh 1' if you want to force compile locally
+    -- (instead of fetching a binary from the github release). Requires Rust >= 1.65
+
+    config = function()
+      require('sniprun').setup {
+        -- your options
       }
     end,
   },

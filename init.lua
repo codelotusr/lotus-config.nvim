@@ -515,7 +515,7 @@ require('lazy').setup({
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
         go = { 'goimports', 'gofmt', stop_after_first = true },
         sql = { 'pg_format', 'sqlfluff', stop_after_first = true },
-        html = { 'htmlhint', 'curlylint' },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
         htmldjango = { 'djhtml', 'djlint' },
       },
     },
@@ -669,7 +669,7 @@ require('lazy').setup({
     end,
   },
 
-  -- Highlight todo, notes, etc in comments
+  -- Highlight todo, notes, etc in comments'folke/tokyonight.nvim'
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
@@ -736,6 +736,69 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+  },
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    dependencies = { 'nvim-treesitter' }, -- Ensure it loads after nvim-treesitter
+    opts = {
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ['af'] = '@function.outer',
+            ['if'] = '@function.inner',
+            ['ac'] = '@class.outer',
+            ['ic'] = '@class.inner',
+          },
+          swap = {
+            enable = true,
+            swap_next = {
+              ['<leader>a'] = '@parameter.inner',
+            },
+            swap_previous = {
+              ['<leader>A'] = '@parameter.inner',
+            },
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = {
+            [']m'] = '@function.outer',
+            [']]'] = '@class.outer',
+          },
+          goto_next_end = {
+            [']M'] = '@function.outer',
+            [']['] = '@class.outer',
+          },
+          goto_previous_start = {
+            ['[m'] = '@function.outer',
+            ['[['] = '@class.outer',
+          },
+          goto_previous_end = {
+            ['[M'] = '@function.outer',
+            ['[]'] = '@class.outer',
+          },
+        },
+      },
+    },
+    config = function(_, opts)
+      require('nvim-treesitter.configs').setup(opts)
+
+      local keymap = vim.api.nvim_set_keymap
+      local opts = { noremap = true, silent = true }
+      keymap('n', '<leader>a', ':TSTextobjectSwapNext @parameter.inner<CR>', opts)
+      keymap('n', '<leader>A', ':TSTextobjectSwapPrevious @parameter.inner<CR>', opts)
+    end,
+  },
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    dependencies = { 'nvim-treesitter' },
+    config = function()
+      require('treesitter-context').setup {}
+      vim.api.nvim_set_keymap('n', '<leader>tc', '<cmd>TSContextToggle<CR>', { noremap = true, silent = true, desc = '[T]oggle Treesitter [C]ontext' })
     end,
   },
 
