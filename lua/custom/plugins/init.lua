@@ -160,7 +160,7 @@ return {
         ui.nav_file(4)
       end, { desc = 'Harpoon: Go to Mark 4' })
 
-      vim.keymap.set('n', '<C-n', ui.nav_prev, { desc = 'Harpoon: Go to Previous Mark' })
+      vim.keymap.set('n', '<C-n>', ui.nav_prev, { desc = 'Harpoon: Go to Previous Mark' })
       vim.keymap.set('n', '<C-p>', ui.nav_next, { desc = 'Harpoon: Go to Next Mark' })
 
       require('telescope').load_extension 'harpoon'
@@ -344,12 +344,12 @@ return {
     opts = {
       workspaces = {
         {
-          name = 'personal',
-          path = '/mnt/c/Users/Lotus/Sync/0',
+          name = 'Work',
+          path = '/mnt/c/Users/Lotus/Documents/Vaults/Work/',
         },
         {
-          name = 'work',
-          path = '~/vaults/work',
+          name = 'Personal',
+          path = '/mnt/c/Users/Lotus/Documents/Vaults/Personal/',
         },
       },
     },
@@ -358,6 +358,71 @@ return {
         '<leader>on',
         '<cmd>ObsidianNew<CR>',
         desc = 'Create a new Obsidian Note',
+      },
+      {
+        '<leader>oqs',
+        '<cmd>ObsidianQuickSwitch<CR>',
+        desc = 'Quickly switch to another note in the vault',
+      },
+      {
+        '<leader>ofl',
+        '<cmd>ObsidianFollowLink<CR>',
+        desc = 'Follow a link in Obsidian',
+      },
+      {
+        '<leader>obl',
+        '<cmd>ObsidianBacklinks<CR>',
+        desc = 'List of refs to the current buffer',
+      },
+      {
+        '<leader>otd',
+        '<cmd>ObsidianToday<CR>',
+        desc = 'Create a daily note',
+      },
+      {
+        '<leader>odp',
+        '<cmd>ObsidianDailies<CR>',
+        desc = 'List of daily notes',
+      },
+      {
+        '<leader>ot',
+        '<cmd>ObsidianTemplate<CR>',
+        desc = 'Insert a template',
+      },
+      {
+        '<leader>os',
+        '<cmd>ObsidianSearch<CR>',
+        desc = 'Search for notes',
+      },
+      {
+        '<leader>ocl',
+        '<cmd>ObsidianLinks<CR>',
+        desc = 'Collect all links in current buffer',
+      },
+      {
+        '<leader>ow',
+        '<cmd>ObsidianWorkspace<CR>',
+        desc = 'Change workspaces',
+      },
+      {
+        '<leader>oen',
+        '<cmd>ObsidianExtractNote<CR>',
+        desc = 'Extract note',
+      },
+      {
+        '<leader>otc',
+        '<cmd>ObsidianToggleCheckbox<CR>',
+        desc = 'Toggle a checkbox in Obsidian',
+      },
+      {
+        '<leader>onft',
+        '<cmd>ObsidianNewFromTemplate<CR>',
+        desc = 'Create a new note from a template',
+      },
+      {
+        '<leader>otoc',
+        '<cmd>ObsidianTOC<CR>',
+        desc = 'Load table contents into a list',
       },
     },
   },

@@ -516,6 +516,7 @@ require('lazy').setup({
         sql = { 'pg_format', 'sqlfluff', stop_after_first = true },
         html = { 'prettierd', 'prettier', stop_after_first = true },
         htmldjango = { 'djhtml', 'djlint' },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -767,6 +768,7 @@ require('lazy').setup({
           goto_next_start = {
             [']m'] = '@function.outer',
             [']]'] = '@class.outer',
+            [']t'] = '@tag.outer',
           },
           goto_next_end = {
             [']M'] = '@function.outer',
@@ -775,6 +777,7 @@ require('lazy').setup({
           goto_previous_start = {
             ['[m'] = '@function.outer',
             ['[['] = '@class.outer',
+            ['[t'] = '@tag.outer',
           },
           goto_previous_end = {
             ['[M'] = '@function.outer',
