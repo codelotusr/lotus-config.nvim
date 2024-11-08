@@ -34,3 +34,5 @@ else
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 end
+
+vim.keymap.set('i', '<CapsLock>', '<Esc>', { noremap = true, silent = true })

@@ -810,7 +810,6 @@ require('lazy').setup({
           prev_selection = ',',
           keymaps = {
             ['.'] = 'textsubjects-smart',
-            [';'] = 'textsubjects-container-outer',
           },
         },
       }
