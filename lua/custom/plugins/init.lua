@@ -771,4 +771,8 @@ return {
     lazy = false,
     version = '*', -- or branch = "dev", to use the latest commit
   },
+  {
+    config = function() end,
+    'matze/vim-move',
+  },
 }
