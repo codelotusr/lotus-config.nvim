@@ -67,7 +67,6 @@ require('lazy').setup({
       }
     end,
   },
-
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -799,6 +798,22 @@ require('lazy').setup({
     config = function()
       require('treesitter-context').setup {}
       vim.api.nvim_set_keymap('n', '<leader>tc', '<cmd>TSContextToggle<CR>', { noremap = true, silent = true, desc = '[T]oggle Treesitter [C]ontext' })
+    end,
+  },
+  {
+    'RRethy/nvim-treesitter-textsubjects',
+    dependencies = { 'nvim-treesitter' },
+    config = function()
+      require('nvim-treesitter.configs').setup {
+        textsubjects = {
+          enable = true,
+          prev_selection = ',',
+          keymaps = {
+            ['.'] = 'textsubjects-smart',
+            [';'] = 'textsubjects-container-outer',
+          },
+        },
+      }
     end,
   },
 
