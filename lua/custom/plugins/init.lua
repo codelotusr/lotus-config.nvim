@@ -160,8 +160,8 @@ return {
         ui.nav_file(4)
       end, { desc = 'Harpoon: Go to Mark 4' })
 
-      vim.keymap.set('n', '<C-h>', ui.nav_prev, { desc = 'Harpoon: Go to Previous Mark' })
-      vim.keymap.set('n', '<C-l>', ui.nav_next, { desc = 'Harpoon: Go to Next Mark' })
+      vim.keymap.set('n', '<C-n', ui.nav_prev, { desc = 'Harpoon: Go to Previous Mark' })
+      vim.keymap.set('n', '<C-p>', ui.nav_next, { desc = 'Harpoon: Go to Next Mark' })
 
       require('telescope').load_extension 'harpoon'
       vim.keymap.set('n', '<Leader>ht', ':Telescope harpoon marks<CR>', { desc = 'Harpoon: Telescope Marks' })
@@ -709,5 +709,66 @@ return {
         -- your options
       }
     end,
+  },
+  {
+    'stevearc/overseer.nvim',
+    opts = {},
+  },
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      local function harpoon_status()
+        local mark = require 'harpoon.mark'
+        local cursor_file = vim.fn.expand '%'
+        local mark_idx = mark.get_current_index(cursor_file)
+        if mark_idx then
+          return '⚓ Harpoon[' .. mark_idx .. ']'
+        end
+        return ''
+      end
+
+      local function breakpoint_count()
+        local dap_breakpoints = require('dap.breakpoints').get()
+        local buf = vim.api.nvim_get_current_buf()
+        local buf_bps = dap_breakpoints[buf] or {}
+        return '● BPs[' .. #buf_bps .. ']'
+      end
+
+      local function macro_recording_status()
+        local reg = vim.fn.reg_recording()
+        if reg ~= '' then
+          return '⏺️ Recording @' .. reg
+        end
+        return ''
+      end
+
+      require('lualine').setup {
+        sections = {
+          lualine_a = { 'mode' },
+          lualine_b = { 'branch', 'diff', 'diagnostics' },
+          lualine_c = {
+            { harpoon_status, color = { fg = '#FFD700', gui = 'bold' } }, -- Gold
+            { breakpoint_count, color = { fg = '#FF4500', gui = 'bold' } }, -- Orange Red
+            { macro_recording_status, color = { fg = '#00FA9A', gui = 'italic' } }, -- Spring Green
+          },
+          lualine_x = { 'encoding', 'fileformat', 'filetype' },
+          lualine_y = { 'progress' },
+          lualine_z = { 'location' },
+        },
+        options = {
+          icons_enabled = true,
+          theme = 'auto',
+          component_separators = { left = '', right = '' },
+          section_separators = { left = '', right = '' },
+          globalstatus = true,
+        },
+      }
+    end,
+  },
+  {
+    'NStefan002/screenkey.nvim',
+    lazy = false,
+    version = '*', -- or branch = "dev", to use the latest commit
   },
 }
