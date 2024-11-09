@@ -352,6 +352,11 @@ return {
           path = '/mnt/c/Users/Lotus/Documents/Vaults/Personal/',
         },
       },
+      templates = {
+        folder = 'templates',
+        date_format = '%Y-%m-%d-%a',
+        time_format = '%H:%M',
+      },
     },
     keys = {
       {

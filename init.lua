@@ -127,6 +127,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sj', builtin.jumplist, { desc = '[S]earch [J]ump List' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -219,6 +220,8 @@ require('lazy').setup({
           --  Most Language Servers support renaming across files, etc.
           map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 
+          map('<leader>e', vim.diagnostic.open_float, '[E]rror Diagnostic (Float)')
+
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
@@ -294,9 +297,18 @@ require('lazy').setup({
                 useLibraryCodeForTypes = true,
                 diagnosticMode = 'workspace',
                 autoImportCompletions = true,
+                diagnosticSeverityOverrides = {
+                  reportUnusedImport = 'none',
+                  reportUnusedVariable = 'none',
+                },
               },
             },
           },
+        },
+        ruff = {
+          on_attach = function(client, bufnr)
+            client.server_capabilities.hoverProvider = false
+          end,
         },
         cssls = {
           cmd = { 'vscode-css-language-server', '--stdio' },
@@ -389,7 +401,6 @@ require('lazy').setup({
           filetypes = {
             'aspnetcorerazor',
             'astro',
-            'astro-markdown',
             'blade',
             'clojure',
             'django-html',
@@ -412,7 +423,6 @@ require('lazy').setup({
             'jade',
             'leaf',
             'liquid',
-            'markdown',
             'mdx',
             'mustache',
             'njk',
@@ -470,6 +480,7 @@ require('lazy').setup({
         'typescript-language-server', -- TypeScript/JavaScript support
         'angular-language-server', -- Angular support
         'pyright',
+        'ruff',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

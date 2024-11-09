@@ -61,6 +61,10 @@ return {
         'python',
         'js',
       },
+
+      vim.fn.sign_define('DapBreakpoint', { text = 'B', texthl = 'Error', linehl = '', numhl = '' }),
+      vim.fn.sign_define('DapBreakpointCondition', { text = 'C', texthl = 'Warning', linehl = '', numhl = '' }),
+      vim.fn.sign_define('DapBreakpointRejected', { text = 'R', texthl = 'DiagnosticError', linehl = '', numhl = '' }),
     }
 
     -- Dap UI setup
